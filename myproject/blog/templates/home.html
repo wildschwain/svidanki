@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добро пожаловать</title>
+    <style>
+        .home {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .profile {
+            text-align: left;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile">
+        <h1>Ваш профиль</h1><br>
+        <h2>Фото профиля</h2>
+        {% if user_profile.image %}
+            <img src="{{ user.profile.image.url }}" alt="Фото профиля" style="max-width: 200px;">
+        {% else %}
+            <p>Фото профиля отсутствует.</p>
+        {% endif %}
+            <p><strong>Имя: </strong>{{ user_profile.user.username }}</p>
+            <p><strong>Возраст: </strong>{{ user_profile.age }}</p>
+            <p><strong>Пол: </strong>{{ user_profile.gender }}</p>
+            <p><strong>Город: </strong>{{ user_profile.sity }}</p>
+            <p><strong>О себе: </strong>{{ user_profile.about_me }}</p>
+            <p><strong>Цель знакомства: </strong>{{ user_profile.the_purpose_of_dating }}</p>
+            <p><strong>Предпочтения в партнёре: </strong>{{ user_profile.preferences }}</p>
+        <form method="get" action="{% url 'profile' %}">
+            <button type="submit">Редактировать профиль</button>
+        </form>
+    </div>
+
+    <div class="home">
+        <h1>Добро пожаловать!</h1>
+        <p>Рады вас видеть, {{ user.username }}.</p>
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <button type="submit">Вернуться на страницу входа</button>
+        </form><br>
+
+        <form method="post" action="{% url 'user_list' %}">
+            {% csrf_token %}
+            <button type="submit">Пользователи</button>
+        </form>
+
+    </div>
+</body>
+</html>

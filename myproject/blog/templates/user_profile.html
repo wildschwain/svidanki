@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="profile">
+    <h2>Фото профиля</h2>
+        {% if user_profile.image %}
+            <img src="{{ user.profile.image.url }}" alt="Фото профиля" style="max-width: 200px;">
+        {% else %}
+            <p>Фото профиля отсутствует.</p>
+        {% endif %}
+            <p><strong>Имя: </strong>{{ user_profile.user.username }}</p>
+            <p><strong>Возраст: </strong>{{ user_profile.age }}</p>
+            <p><strong>Пол: </strong>{{ user_profile.gender }}</p>
+            <p><strong>Город: </strong>{{ user_profile.sity }}</p>
+            <p><strong>О себе: </strong>{{ user_profile.about_me }}</p>
+            <p><strong>Цель знакомства: </strong>{{ user_profile.the_purpose_of_dating }}</p>
+            <p><strong>Предпочтения в партнёре: </strong>{{ user_profile.preferences }}</p>
+</div>
+{% endblock %}

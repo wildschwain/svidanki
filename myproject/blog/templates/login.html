@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Авторизация</title>
+</head>
+<body>
+    <h1>Вход</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Войти</button><br><br>
+        <a href="{% url 'register' %}">Регистрация</a>
+    </form>
+</body>
+</html>
