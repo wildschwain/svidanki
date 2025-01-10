@@ -4,15 +4,14 @@ from .forms import CustomUserCreationForm, ProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import Profile, Sity, User
- 
+import random
+from random import random
+
 
 
 def User_List(request):
     if request.method == 'post':
-        return render(request, 'home.html')
-
-def login(request):
-    return render(request, 'home.html')
+        return render(request, 'home.html', 'user_profile.html')
 
 def Home(request):
     if request.method == "POST":
@@ -62,7 +61,7 @@ def home(request):
 
 
 def user_profile(request, user_id):
-    user = User.objects.get( id = user_id )
+    user = get_object_or_404(Profile, id = user_id )
     return render(request, 'user_profile.html', {'user':user})
 
 def user_list(request):

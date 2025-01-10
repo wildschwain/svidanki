@@ -15,7 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-LOGIN_REDIRECT_URL = '/site/'  # Укажите путь к вашей странице
+LOGIN_REDIRECT_URL = '/home/'  # Укажите путь к вашей странице
 LOGOUT_REDIRECT_URL = '/'  # Перенаправление после выхода (по желанию)
 
 import os

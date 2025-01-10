@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Task(models.Model):
     title = models.CharField(max_length=200)
@@ -23,12 +24,6 @@ class Gender(models.Model):
     def __str__(self):
         return self.title
 
-class Age(models.Model):
-    title = models.PositiveIntegerField()
-
-    def __str__(self):
-        return str(self.title)
-
 class The_purpose_of_dating(models.Model):
     title = models.CharField(max_length=50)
 
@@ -36,7 +31,7 @@ class The_purpose_of_dating(models.Model):
         return self.title
     
 class Profile(models.Model):
-    age = models.ForeignKey(Age, on_delete=models.CASCADE, blank=True, null=True, related_name='year')
+    age = models.PositiveIntegerField(default=18,validators = [MaxValueValidator(100),MinValueValidator(18)])
     sity = models.ForeignKey(Sity, on_delete=models.CASCADE, blank=True, null=True, related_name='residents')
     about_me = models.TextField(blank=True, null=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, blank=True, null=True, related_name='gena')
