@@ -27,6 +27,36 @@
             border: 5px solid #4d4d4d;
             padding: 20px;
         }   
+
+        .users {
+            text-align: center;
+            background: #181818;
+            border: 5px solid #4d4d4d;
+            color: #fff;
+        }
+
+        button {
+            background-color: #951f66;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #751246;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+
         h1 {
             color: #951f66;
         }
@@ -37,7 +67,7 @@
 </head>
 <body>
     <div class="profile">
-        <h1>Ваш профиль</h1><br>
+        <h1>Ваш профиль</h1>
         <h2>Фото профиля</h2>
         {% if user_profile.image %}
             <img src="{{ user.profile.image.url }}" alt="Фото профиля" style="max-width: 200px;">
@@ -69,6 +99,40 @@
             <button type="submit">Пользователи</button>
         </form>
 
+    </div>
+
+    <div class="users">
+        <h1>Пользователи из вашего города</h1>
+        {% if profiles %}
+            <ul>
+                {% for profile in profiles %}
+                    <li>
+                        <img src="{{ profile.image.url }}" alt="Фото профиля" style="max-width: 150px;"><br>
+                        <a href="{% url 'user_profile' profile.user.id %}">
+                            {{ profile.user.username }} - {{ profile.sity.title }}
+                        </a>
+
+                        <div>
+                            <form action="{% url 'reaction' profile_id=profile.id  reaction_type='love' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">💘 Понравился(лась)</button>
+                            </form>
+                            <form action="{% url 'reaction' profile_id=profile.id  reaction_type='dislike' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">👎 не понравился(лась)</button>
+                          </form> 
+                        </div>
+                        <div>
+                            <p>💘 Понравившиеся: {{ item.love_count }}</p>
+                            <p>👎 Не понравившиеся: {{ item.dislike_count }}</p>
+                    </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>К сожалению, пользователей из вашего города пока нет.</p>
+        {% endif %}
     </div>
 </body>
 </html>

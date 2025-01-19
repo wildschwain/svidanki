@@ -10,7 +10,7 @@
     {% else %}
         <p>Фото профиля отсутствует.</p>
     {% endif %}
-    <p><strong>Имя: </strong>{{ user.username }}</p>
+    <p><strong>Имя: </strong>{{ user.user }}</p>
     <p><strong>Возраст: </strong>{{ user.age }}</p>
     <p><strong>Пол: </strong>{{ user.gender }}</p>
     <p><strong>Город: </strong>{{ user.sity }}</p>
@@ -21,6 +21,10 @@
     <form method="post" action="{% url 'user_list' %}">
         {% csrf_token %}
         <button type="submit">Назад</button>
+    </form><br>
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <button type="submit">На главную</button>
     </form>
 </div>
 {% endblock %}

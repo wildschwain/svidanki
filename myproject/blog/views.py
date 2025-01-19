@@ -3,9 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserCreationForm, ProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Profile, Sity, User
+from .models import Profile, Reaction, User
 import random
-from random import random
 
 
 
@@ -13,14 +12,6 @@ def User_List(request):
     if request.method == 'post':
         return render(request, 'home.html', 'user_profile.html')
 
-def Home(request):
-    if request.method == "POST":
-        return render(request, 'home.html')
-
-def Alina(request):
-    if request.method == "POST":
-        return render(request, 'alina.html')
-    
 def register(request):
     if request.method=="POST":
         form = CustomUserCreationForm(request.POST)
@@ -55,8 +46,26 @@ def profile(request):
     return render(request, 'profile.html', {'form': forms})
 
 def home(request):
+    current_user_profile = request.user.profile
+    current_user_city = current_user_profile.sity
+    profiles = Profile.objects.filter(sity=current_user_city).exclude(user=request.user)
+    random_profile = random.sample(list(profiles), min(len(profiles), 1))
+    #----------------------------------------------------------------------------------------------
+    profile_data = []
+    for profile in profiles:
+        love_count = profile.reaction.filter(reaction='love').count()
+        dislike_count = profile.reaction.filter(reaction='dislike').count()
+        profile_data.append({'profile': profile, 'love_count': love_count, 'dislike_count': dislike_count})
+    #----------------------------------------------------------------------------------------------
     user_profile = get_object_or_404(Profile, user=request.user) 
-    return render(request, 'home.html' , {'user_profile': user_profile})
+    return render(request, 'home.html' , {'user_profile': user_profile , 'profiles': random_profile, 'profile_data':profile_data})
+
+
+@login_required
+def reaction(request, profile_id, reaction_type):
+    profile = get_object_or_404(Profile, id=profile_id)
+    Reaction.objects.update_or_create(profile=profile, user=request.user, defaults={'reaction':reaction_type})
+    return redirect('home')
 
 
 

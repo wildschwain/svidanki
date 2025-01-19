@@ -4,8 +4,8 @@ from django.contrib.auth.views import LoginView
 from .views import register
 
 urlpatterns = [
+ path('reaction/<int:profile_id>/<str:reaction_type>/', views.reaction, name='reaction'),
  path('home/', views.home, name='home'),
- path('alina/', views.Alina, name='alina'),
  path('register/', views.register, name='register'),
  path('login/', LoginView.as_view(template_name='login.html'), name='login'),
  path('profile/', views.profile, name='profile'),

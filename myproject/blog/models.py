@@ -43,4 +43,15 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
     
-#------------------------------------------------------------ Поиск пользователя
+class Reaction(models.Model):
+    REACTION_CHOISES = [('love','💘 понравился(лась)'), ('dislike','👎 не понравился(лась)'),]
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='reaction')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reaction = models.CharField(max_length=25, choices=REACTION_CHOISES)
+    created_ad = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('profile', 'user')
+
+    def _str_(self):
+        return f'{self.user} - {self.reaction} on {self.profile}'
