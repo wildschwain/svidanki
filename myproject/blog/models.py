@@ -48,10 +48,30 @@ class Reaction(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='reaction')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     reaction = models.CharField(max_length=25, choices=REACTION_CHOISES)
-    created_ad = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('profile', 'user')
 
-    def _str_(self):
-        return f'{self.user} - {self.reaction} on {self.profile}'
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.reaction == 'love':
+            other_reaction = Reaction.objects.filter(
+                profile__user=self.user,
+                user=self.profile.user,
+                reaction='love'
+            ).first()
+            if other_reaction:
+                Match.objects.update_or_create(
+                    user1=min(self.user, self.profile.user, key=lambda u: u.id),
+                    user2=max(self.user, self.profile.user, key=lambda u: u.id),
+                    defaults={'is_mutual': True}
+                )
+
+class Match(models.Model):
+    user1 = models.ForeignKey(User, related_name='matches_initiated', on_delete=models.CASCADE)
+    user2 = models.ForeignKey(User, related_name='matches_received', on_delete=models.CASCADE)
+    is_mutual = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.user1.username} ↔ {self.user2.username} (Mutal: {self.is_mutual})'

@@ -11,5 +11,6 @@ urlpatterns = [
  path('profile/', views.profile, name='profile'),
  path('users/', views.user_list, name='user_list'),
  path('profile/<int:user_id>/', views.user_profile, name='user_profile'),
+ path('chat/<int:user_id>/', views.chat, name='chat'),
 ]
 

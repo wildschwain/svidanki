@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <h1>Чат с {{ other_user.username }}</h1>
+<div class="chat-box">
+    <!-- Здесь будет вывод сообщений -->
+</div>
+<form method="post" action="{% url 'send_message' other_user.id %}">
+    {% csrf_token %}
+    <input type="text" name="message" placeholder="Введите сообщение" required>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+</form>
+
+</body>
+</html>

@@ -105,27 +105,34 @@
         <h1>Пользователи из вашего города</h1>
         {% if profiles %}
             <ul>
-                {% for profile in profiles %}
+                {% for item in profiles %}
                     <li>
-                        <img src="{{ profile.image.url }}" alt="Фото профиля" style="max-width: 150px;"><br>
-                        <a href="{% url 'user_profile' profile.user.id %}">
-                            {{ profile.user.username }} - {{ profile.sity.title }}
+                        <img src="{{ item.image.url }}" alt="Фото профиля" style="max-width: 150px;"><br>
+                        <a href="{% url 'user_profile' item.user.id %}">
+                            {{ item.user.username }} - {{ item.sity.title }}<br>
+                            <strong>О себе: </strong>{{ item.about_me }}
                         </a>
 
                         <div>
-                            <form action="{% url 'reaction' profile_id=profile.id  reaction_type='love' %}" method="post">
+                            <form action="{% url 'reaction' item.user.id  'love' %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-primary">💘 Понравился(лась)</button>
                             </form>
-                            <form action="{% url 'reaction' profile_id=profile.id  reaction_type='dislike' %}" method="post">
+                            <form action="{% url 'reaction' item.user.id  'dislike' %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-primary">👎 не понравился(лась)</button>
                           </form> 
                         </div>
                         <div>
-                            <p>💘 Понравившиеся: {{ item.love_count }}</p>
-                            <p>👎 Не понравившиеся: {{ item.dislike_count }}</p>
-                    </div>
+                            {% with item.profile.user as other_user %}
+                            {% for match in user.matches_initiated.all %}
+                                {% if match.user2 == other_user and match.is_mutual %}
+                                    <a href="{% url 'chat' user_id=other_user.id %}" class="btn btn-success">
+                                        💬 Открыть чат
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
                         </div>
                     </li>
                 {% endfor %}

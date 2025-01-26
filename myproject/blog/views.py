@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserCreationForm, ProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Profile, Reaction, User
+from .models import Profile, Reaction, User, Match
+from django.contrib import messages
 import random
 
 
@@ -64,7 +65,21 @@ def home(request):
 @login_required
 def reaction(request, profile_id, reaction_type):
     profile = get_object_or_404(Profile, id=profile_id)
-    Reaction.objects.update_or_create(profile=profile, user=request.user, defaults={'reaction':reaction_type})
+    Reaction.objects.update_or_create(
+        profile=profile,
+        user=request.user, 
+        defaults={'reaction':reaction_type}
+    )
+    if reaction_type == 'love':
+        other_reaction = Reaction.objects.filter(
+            profile__user=request.user,
+            user=profile.user,
+            reaction='love'
+        ).first()
+        if other_reaction:
+            messages.success(request, f'У вас взаимная симпатия с {profile.user.username}, начните общение!')
+        else:
+            messages.info(request, f'{profile.user.username} уведомлён о вашей симпатии')
     return redirect('home')
 
 
@@ -76,3 +91,14 @@ def user_profile(request, user_id):
 def user_list(request):
     users = User.objects.all()
     return render(request, 'user_list.html', {'users':users})
+
+@login_required
+def chat(request, user_id):
+    other_user = get_object_or_404(User, id=user_id)
+    if not Match.objects.filter(
+                    user1=min(request.user, request.profile.user, key=lambda u: u.id),
+                    user2=max(request.user, request.profile.user, key=lambda u: u.id),
+                    is_mutual=True
+                ).exists():
+                return redirect('home')
+    return render(request, 'chat.html', {'other_user':other_user})
