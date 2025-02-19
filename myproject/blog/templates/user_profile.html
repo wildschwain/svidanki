@@ -17,6 +17,7 @@
     <p><strong>О себе: </strong>{{ user.about_me }}</p>
     <p><strong>Цель знакомства: </strong>{{ user.the_purpose_of_dating }}</p>
     <p><strong>Предпочтения в партнёре: </strong>{{ user.preferences }}</p>
+    <p><strong>Ссылка на соц.сеть: </strong>{{ user.message }}</p>
 
     <form method="post" action="{% url 'user_list' %}">
         {% csrf_token %}

@@ -9,7 +9,7 @@
         body {
             background: #000000;
         }
-
+        
         .home {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -43,6 +43,7 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
+            transition: background 0.3s ease-in-out;
         }
 
         button:hover {
@@ -53,8 +54,10 @@
             list-style: none;
             padding: 0;
         }
+
         li {
-            margin: 10px 0;
+            margin: 15px 0;
+            padding: 10px;
         }
 
         h1 {
@@ -63,6 +66,16 @@
         p {
             font-size: 18px;
         }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        a {
+            color: #751246;
+        }
+        
     </style>
 </head>
 <body>
@@ -81,6 +94,7 @@
             <p><strong>О себе: </strong>{{ user_profile.about_me }}</p>
             <p><strong>Цель знакомства: </strong>{{ user_profile.the_purpose_of_dating }}</p>
             <p><strong>Предпочтения в партнёре: </strong>{{ user_profile.preferences }}</p>
+            <p><strong>Ссылка на соц.сеть: </strong>{{ user_profile.message }}</p>
         <form method="get" action="{% url 'profile' %}">
             <button type="submit">Редактировать профиль</button>
         </form>
@@ -99,6 +113,7 @@
             <button type="submit">Пользователи</button>
         </form>
 
+
     </div>
 
     <div class="users">
@@ -110,32 +125,17 @@
                         <img src="{{ item.image.url }}" alt="Фото профиля" style="max-width: 150px;"><br>
                         <a href="{% url 'user_profile' item.user.id %}">
                             {{ item.user.username }} - {{ item.sity.title }}<br>
-                            <strong>О себе: </strong>{{ item.about_me }}
+                            <strong>О себе: </strong>{{ item.about_me }}<br>
+                            <strong>Ссылка на соц.сеть: </strong>{{ item.message }}
                         </a>
-
-                        <div>
-                            <form action="{% url 'reaction' item.user.id  'love' %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary">💘 Понравился(лась)</button>
-                            </form>
-                            <form action="{% url 'reaction' item.user.id  'dislike' %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary">👎 не понравился(лась)</button>
-                          </form> 
-                        </div>
-                        <div>
-                            {% with item.profile.user as other_user %}
-                            {% for match in user.matches_initiated.all %}
-                                {% if match.user2 == other_user and match.is_mutual %}
-                                    <a href="{% url 'chat' user_id=other_user.id %}" class="btn btn-success">
-                                        💬 Открыть чат
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
-                        {% endwith %}
-                        </div>
                     </li>
                 {% endfor %}
+                <div>
+                    <form method="post" action="{% url 'home' %}">
+                        {% csrf_token %}
+                        <button type="submit">Следующая анкета ➯</button>
+                    </form>
+                </div>
             </ul>
         {% else %}
             <p>К сожалению, пользователей из вашего города пока нет.</p>

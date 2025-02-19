@@ -1,9 +1,5 @@
 from django.contrib import admin
-from .models import Task, Sity, Profile, Gender, The_purpose_of_dating
-
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date')
+from .models import Sity, Profile, Gender, The_purpose_of_dating
 
 @admin.register(Sity)
 class SityAdmin(admin.ModelAdmin):
